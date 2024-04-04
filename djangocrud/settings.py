@@ -10,9 +10,18 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+
+#CSP
+from csp.middleware import CSPMiddleware
+from django.utils.html import format_html_join
+from django.utils.safestring import mark_safe
+from django.utils.crypto import get_random_string
+
+
 from pathlib import Path
 import os
 import dj_database_url
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -138,9 +147,14 @@ LOGIN_URL = '/iniciaeSesion'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Content Security Policy para prevenir ataques XSS
-#CSP_DEFAULT_SRC = ("'self'",)  # Solo permite cargar recursos desde el mismo origen (tu propio sitio)
-#CSP_SCRIPT_SRC = ("'self'",)   # Solo permite cargar scripts desde el mismo origen
-#CSP_STYLE_SRC = ("'self'",)    # Solo permite cargar estilos desde el mismo origen
 
+CSP_DEFAULT_SRC = ("'self'",)  # Solo permite cargar recursos desde el mismo origen (tu propio sitio)
+CSP_SCRIPT_SRC = ("'self'",)   # Solo permite cargar scripts desde el mismo origen
+CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", "https://stackpath.bootstrapcdn.com")  # Permitir también Bootstrap desde un CDN confiable
 
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True
